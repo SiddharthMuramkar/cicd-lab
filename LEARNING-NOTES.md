@@ -60,3 +60,15 @@ Terms from Brad Traversy's CI/CD crash course, in plain English. Words in **bold
 **Workflow**: a YAML file in `.github/workflows/` that tells GitHub Actions *when* to run (for us: a pull request into `main`, or a push to `main`) and *what* to do (check out the code, set up Node 24, `npm ci`, `npm run verify`).
 
 **Branch**: a separate line of work. Creating one adds a new label at your current commit; new commits move only that label, so `main` stays untouched until you merge. Uncommitted changes don't belong to any branch yet, so they come along to a branch you create.
+
+**YAML**: a plain-text settings format. `key: value` sets something, a leading `-` starts a list item, and indentation (spaces, never tabs) shows what belongs inside what.
+
+**Trigger (`on`)**: the events that start a workflow. Ours starts on a push to `main`, and on a pull request into `main` (opened, or updated by a new push).
+
+**Permissions (`contents: read`)**: each run gets a temporary GitHub key. Ours can only read the code, not push, merge or change settings: give a workflow only what it needs.
+
+**Job**: a list of steps that runs on one **runner**. Ours has the ID `verify` and the display name **Verify**, which is the check name on every PR and the name both gates look for in ticket 3. `runs-on` picks the runner (`ubuntu-latest`); `timeout-minutes: 10` stops a stuck job instead of letting it run for GitHub's default of 6 hours.
+
+**Step, `uses` vs `run`**: steps run top to bottom, and the first failure stops the job. `uses` runs a ready-made **action** (a packaged step someone else wrote, like `actions/checkout@v7`, where `@v7` is the version). `run` is a shell command, the same as typing it in your terminal.
+
+**npm cache (`cache: npm`)**: `setup-node` saves npm's downloaded packages after a run (the "Post Set up Node.js" log line) and restores them next time, so `npm ci` doesn't download everything again. Changing `package-lock.json` starts a fresh cache.
