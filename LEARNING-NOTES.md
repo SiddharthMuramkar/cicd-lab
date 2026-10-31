@@ -36,7 +36,7 @@ Terms from Brad Traversy's CI/CD crash course, in plain English. Words in **bold
 
 **Environment variable**: a named setting (like `VERCEL_EXPERIMENTAL_BACKENDS=1`) that a platform hands to your build or app without it being written in the code. Each one can be switched on per environment: Production, Preview, Development.
 
-**Build Command**: the command Vercel runs to build your app. Left empty, Vercel uses `package.json`'s `build` script and adds its own steps; set explicitly (we use `npm run build`), it trusts your command. We needed that because Vercel's own extra type check crashes on TypeScript 7 (open bug vercel/vercel#17390).
+**Build Command**: the command Vercel runs to build your app. Left empty, Vercel uses `package.json`'s `build` script and adds its own steps; set explicitly (we use `npm run build`), it trusts your command. We set it in ticket 1 while working around TypeScript 7; it's harmless now that we're on TypeScript 6 (see "Why we dropped it" below).
 
 **Deployment**: one build of one commit, served at its own unique URL (like `cicd-cme8nxrgd-acme-ef4b.vercel.app`). Every push or redeploy makes a new one; old ones stay in the list.
 
@@ -50,6 +50,8 @@ Terms from Brad Traversy's CI/CD crash course, in plain English. Words in **bold
 - **Deployment vs Production URL**: a Deployment is one build of one commit, from any branch (only builds of `main` are Production deployments). The Production URL is the free `*.vercel.app` address that always serves the latest live Production deployment; a bought custom domain is a separate, optional extra on top.
 
 **Builder / backends build mode**: a builder is the Vercel program that turns your repo into something it can run. `VERCEL_EXPERIMENTAL_BACKENDS=1` swaps Express's default builder for a newer, opt-in one (better imports, logs filterable by route). Source: https://vercel.com/changelog/experimental-build-mode-hono-express
+
+**Why we dropped it (ticket 2)**: both Vercel builders break on TypeScript 7. The default one fails with `TS2688: Cannot find type definition file for 'node'`, and the experimental one crashes in its own type check (vercel/vercel#17390). The variable was only on for Production, so the first Preview deployment failed. We removed the variable and moved TypeScript from 7 to 6, which the default builder handles.
 
 ## Ticket 2: GitHub Actions CI
 
