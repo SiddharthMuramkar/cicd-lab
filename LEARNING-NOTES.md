@@ -1,6 +1,6 @@
 # Learning notes
 
-Terms from Brad Traversy's CI/CD crash course, in plain English. Words in **bold** are defined in `GLOSSARY.md`.
+Terms from Brad Traversy's CI/CD crash course, in plain English.
 
 ## Ticket 1: Baseline and first Vercel deploy
 
